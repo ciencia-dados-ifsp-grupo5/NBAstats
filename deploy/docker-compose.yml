@@ -1,0 +1,20 @@
+version: '3'
+services:
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+
+  backend:
+    restart: always
+    container_name: backend
+    build: ./backend
+    ports:
+      - 5000:5000
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=server.py
+      - FLASK_DEBUG=1
