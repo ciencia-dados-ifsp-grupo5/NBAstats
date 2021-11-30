@@ -1,8 +1,9 @@
-// const API_URL = '/api/model/predict';
-const API_URL = 'http://localhost:5000';
+const API_URL = '/api';
+// const API_URL = 'http://localhost:5000';
 
 const PREDICT_URL = API_URL + '/model/predict';
 const PLAYER_LIST_URL = API_URL + '/player/list';
+const PLAYER_DATA_URL = API_URL + '/player/data';
 
 var player_list = null;
 
@@ -34,10 +35,47 @@ const getPlayerList = () => {
       let datalist = document.querySelector('#playerlist');
       list.forEach((player) => {
         let option = document.createElement('option');
-        option.setAttribute('data-value', player.id);
-        option.setAttribute('value', player.name);
+        option.setAttribute('data-value', player.PLAYER_ID);
+        option.setAttribute('value', player.PLAYER_NAME);
         datalist.appendChild(option);
       });
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {});
+};
+
+const getPlayerData = (player_id, season_id) => {
+  fetch(PLAYER_DATA_URL + `/${player_id}/${season_id}`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    })
+    .then((data) => {
+      console.log(data);
+      document
+        .querySelector('#featuresContainer')
+        .querySelectorAll('input')
+        .forEach((input) => {
+          input.value = data[input.id];
+        });
+
+      salary = Number.parseFloat(data['SALARY_NOMINAL']);
+
+      let divSalary = document.querySelector('#realSalary');
+      divSalary.children[1].textContent = salary.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
+      divSalary.classList.remove('d-none');
     })
     .catch((error) => {
       console.error(error);
@@ -102,7 +140,7 @@ document.getElementsByName('mode').forEach((radio) => {
           .querySelector('#featuresContainer')
           .querySelectorAll('input')
           .forEach((input) => {
-            input.disabled = true;
+            input.readOnly = true;
           });
         break;
       case 'fill':
@@ -121,6 +159,29 @@ document.getElementsByName('mode').forEach((radio) => {
   });
 });
 
-document.querySelector('#playerlist').addEventListener('input', () => {
-  console.log('mudou');
+document.querySelector('#confirmPlayer').addEventListener('click', () => {
+  if (!player_list) {
+    return;
+  }
+
+  let player_name = document
+    .querySelector('#divSearch')
+    .querySelector('input').value;
+
+  let player = player_list.find((p) => p.PLAYER_NAME == player_name);
+  if (player) {
+    season_selector = document.querySelector('#SEASON_ID');
+    season_selector.querySelectorAll('*').forEach((c) => c.remove());
+
+    [null].concat(player.SEASONS).forEach((season) => {
+      let option = document.createElement('option');
+      option.setAttribute('value', season ?? '');
+      option.text = season ?? 'Selecione';
+
+      season_selector.appendChild(option);
+    });
+    season_selector.addEventListener('change', () => {
+      getPlayerData(player.PLAYER_ID, season_selector.value);
+    });
+  }
 });
