@@ -206,25 +206,6 @@ const createFeature = (feature) => {
   return divFeature;
 };
 
-const fillWithRandomData = () => {
-  document
-    .querySelector('#featuresContainer')
-    .querySelectorAll('input')
-    .forEach((input) => {
-      min = Number.parseInt(input.min);
-      max = Number.parseInt(input.max);
-      step = Number.parseFloat(input.step);
-
-      value = Math.random() * (max - min) + min;
-
-      precision = -1 * Math.log10(step);
-      input.value = Number.parseFloat(value).toFixed(precision);
-    });
-};
-document.querySelector('#btnRandom').addEventListener('click', () => {
-  fillWithRandomData();
-});
-
 let allFeatures = document.querySelector('#featuresContainer');
 features.forEach((feature) => {
   allFeatures.appendChild(createFeature(feature));
