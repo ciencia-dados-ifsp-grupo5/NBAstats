@@ -25,7 +25,7 @@ const serializeForm = (form) => {
   const obj = {};
   const formData = new FormData(form);
   for (let key of formData.keys()) {
-    obj[key] = formData.get(key);
+    obj[key] = Number(formData.get(key));
   }
   return obj;
 };
@@ -84,7 +84,7 @@ const fillPlayerData = (data) => {
       input.value = data[input.id];
     });
 
-  let salary = Number.parseFloat(data['SALARY_NOMINAL']);
+  let salary = Number.parseFloat(data['SALARY_REAL']);
 
   let divSalary = document.querySelector('#realSalary');
   divSalary.children[1].textContent = salary.toLocaleString('en-US', {
@@ -163,11 +163,11 @@ const getPlayerData = async (player_id, season_id) => {
   }
 };
 
-const postPredict = async () => {
+const postPredict = async (body) => {
   try {
     let response = await fetch(PREDICT_URL, {
       method: 'POST',
-      body: JSON.stringify(serializeForm(event.target)),
+      body: body,
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
@@ -197,7 +197,8 @@ const submitForm = (event) => {
   predValue.classList.add('d-none');
   predLoading.classList.remove('d-none');
 
-  postPredict()
+  let body = JSON.stringify(serializeForm(event.target));
+  postPredict(body)
     .then((predictions) => {
       let salary = Number.parseFloat(predictions.predictions[0]);
       predValue.textContent = salary.toLocaleString('en-US', {
