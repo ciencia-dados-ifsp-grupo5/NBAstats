@@ -1,3 +1,10 @@
+# From other sources
+deploy/models/*
+
+# Secrets
 .env
+
+# Cache
 .ipynb_checkpoints
 __pycache__
+.DS_Store
