@@ -11,6 +11,8 @@ from dbconnector import DbConnector
 from api.predictor import predictor_api
 from api.player import player_api
 
+from custom_transformers import FeatureSelector
+
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(predictor_api, url_prefix='/model')

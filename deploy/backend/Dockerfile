@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPY server.py dbconnector.py .env /usr/src/app/
+COPY custom_transformers.py dbconnector.py server.py .env /usr/src/app/
 COPY api/ /usr/src/app/api/
 
 EXPOSE 5000

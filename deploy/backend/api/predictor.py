@@ -7,17 +7,10 @@ predictor_api = Blueprint('predictor_api', __name__)
 
 class Predictor(Resource):
 
-    def preprocess(self, df):
-        df['REB/MIN'] = df['REB'] / df['MIN']
-        df['AST/MIN'] = df['AST'] / df['MIN']
-        df['PTS/MIN'] = df['PTS'] / df['MIN']
-        return df
-
     def predict(self, models, payload):
         predictions = []
 
         data = pd.json_normalize(payload).fillna(0).copy()
-        data = self.preprocess(data)
         seasons = data['SEASON_ID'].unique()
         for season in seasons:
             season_data = data[data['SEASON_ID'] == season]
