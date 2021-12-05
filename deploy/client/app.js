@@ -1,5 +1,5 @@
-// const API_URL = '/api';
-const API_URL = 'http://localhost:5000';
+const API_URL = '/api';
+// const API_URL = 'http://localhost:5000';
 
 const PREDICT_URL = API_URL + '/model/predict';
 const SEASON_LIST_URL = API_URL + '/player/season/list';
