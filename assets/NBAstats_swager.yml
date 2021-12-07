@@ -1,0 +1,288 @@
+swagger: '2.0'
+info:
+  description: 'Definition of API requests to NBAstats project'
+  version: '1.0.0'
+  title: 'NBAstats API'
+  contact:
+    name: 'Grupo 5'
+    url: 'https://github.com/ciencia-dados-ifsp-grupo5/'
+  license:
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: '18.228.157.32'
+basePath: '/api'
+tags:
+  - name: 'model'
+    description: 'Use ML models to make predictions'
+    externalDocs:
+      description: 'Find out more'
+      url: 'https://github.com/ciencia-dados-ifsp-grupo5/NBAstats'
+  - name: 'player'
+    description: 'Fetch player data'
+schemes:
+  - 'http'
+paths:
+  /model/predict:
+    post:
+      tags:
+        - 'model'
+      summary: 'Make predictions'
+      description: ''
+      operationId: 'postPredict'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          description: 'List of Player attributes'
+          required: true
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/PlayerStats'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/Predictions'
+  /player/season/list:
+    get:
+      tags:
+        - 'player'
+      summary: 'Get a list of available season'
+      description: ''
+      operationId: 'getSeason'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            type: 'array'
+            items:
+              type: 'integer'
+            example:
+              [
+                2021,
+                2020,
+                2019,
+                2018,
+                2017,
+                2016,
+                2015,
+                2014,
+                2013,
+                2012,
+                2011,
+                2010,
+                2009,
+                2008,
+                2007,
+                2006,
+                2005,
+                2004,
+                2003,
+                2002,
+                2001,
+                2000,
+                1999,
+                1998,
+                1997,
+                1996,
+                1995,
+                1994,
+                1993,
+                1992,
+                1991,
+              ]
+  /player/list:
+    get:
+      tags:
+        - 'player'
+      summary: 'Get a list of available player'
+      description: ''
+      operationId: 'getPlayer'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/PlayerItem'
+  /player/data/{playerId}/{seasonId}:
+    get:
+      tags:
+        - 'player'
+      summary: 'Get data about a player in a season'
+      description: ''
+      operationId: 'getPlayerData'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'path'
+          name: 'playerId'
+          type: 'integer'
+          required: true
+          description: 'Player ID to get'
+        - in: 'path'
+          name: 'seasonId'
+          type: 'integer'
+          required: true
+          description: 'Season ID to get'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/Player'
+definitions:
+  Player:
+    allOf:
+      - $ref: '#/definitions/PlayerStats'
+      - type: 'object'
+        properties:
+          LEAGUE_ID:
+            type: 'integer'
+            example: 0
+          PLAYER_ID:
+            type: 'integer'
+            example: 2544
+          PLAYER_NAME:
+            type: 'string'
+            example: 'LeBron James'
+          SALARY_NOMINAL:
+            type: 'number'
+            example: 39219566.0
+          SALARY_REAL:
+            type: 'number'
+            example: 39219566.0
+          TEAM_ABBREVIATION:
+            type: 'string'
+            example: 'LAL'
+          TEAM_ID:
+            type: 'integer'
+            example: 1610612747
+  PlayerItem:
+    type: 'object'
+    properties:
+      PLAYER_ID:
+        type: 'integer'
+        example: 2544
+      PLAYER_NAME:
+        type: 'string'
+        example: 'LeBron James'
+      SEASONS:
+        type: 'array'
+        items:
+          type: 'integer'
+        example:
+          [
+            2021,
+            2020,
+            2019,
+            2018,
+            2017,
+            2016,
+            2015,
+            2014,
+            2013,
+            2012,
+            2011,
+            2010,
+            2009,
+            2008,
+            2007,
+            2006,
+            2005,
+            2004,
+          ]
+  PlayerStats:
+    type: 'object'
+    properties:
+      SEASON_ID:
+        type: 'integer'
+        example: 2021
+      AST:
+        type: 'integer'
+        example: 350
+      BLK:
+        type: 'integer'
+        example: 25
+      DREB:
+        type: 'integer'
+        example: 317
+      FG3A:
+        type: 'integer'
+        example: 285
+      FG3M:
+        type: 'integer'
+        example: 104
+      FG3_PCT:
+        type: 'number'
+        example: 0.365
+      FGA:
+        type: 'integer'
+        example: 823
+      FGM:
+        type: 'integer'
+        example: 422
+      FG_PCT:
+        type: 'number'
+        example: 0.513
+      FTA:
+        type: 'integer'
+        example: 255
+      FTM:
+        type: 'integer'
+        example: 178
+      FT_PCT:
+        type: 'number'
+        example: 0.698
+      GP:
+        type: 'integer'
+        example: 45
+      GS:
+        type: 'integer'
+        example: 45
+      MIN:
+        type: 'integer'
+        example: 1504
+      OREB:
+        type: 'integer'
+        example: 29
+      PF:
+        type: 'integer'
+        example: 70
+      PLAYER_AGE:
+        type: 'integer'
+        example: 36
+      PTS:
+        type: 'integer'
+        example: 1126
+      REB:
+        type: 'integer'
+        example: 346
+      STL:
+        type: 'integer'
+        example: 48
+      TOV:
+        type: 'integer'
+        example: 168
+  Predictions:
+    type: 'object'
+    properties:
+      predictions:
+        type: 'array'
+        items:
+          type: 'number'
+          example: 38202655.40251811
+externalDocs:
+  description: 'Find out more about Swagger'
+  url: 'http://swagger.io'
