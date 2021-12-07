@@ -23,4 +23,7 @@ Ciência de Dados do IFSP Campinas.
 - Aplicação em produção
   - [API (servidor)](./deploy/backend/)
   - [Aplicação cliente](./deploy/client/)
+    - [Exemplo de predição com atributos personalizados](assets/demo_predict_attributes.gif)
+    - [Exemplo de predição para jogador real](assets/demo_predict_player.gif)
+- [Esquema da arquitetura do projeto](./assets/NBAstats_arquitetura.png)
 - [Conjuntos de dados](./data)
